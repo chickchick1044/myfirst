@@ -17,11 +17,14 @@ class TabPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                ChatFragment tabFragment1 = new ChatFragment();
-                return tabFragment1;
-            case 1:
                 FriendFragment tabFragment2 = new FriendFragment();
+                //ChatFragment tabFragment1 = new ChatFragment();
                 return tabFragment2;
+            case 1:
+                ChatFragment tabFragment1= new ChatFragment();
+                return tabFragment1;
+                //FriendFragment tabFragment2 = new FriendFragment();
+                //return tabFragment2;
             default:
                 return null;
         }
