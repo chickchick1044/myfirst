@@ -10,17 +10,22 @@
     <LinearLayout
         android:id="@+id/search_area"
         android:visibility="gone"
+        android:padding="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <EditText
-            android:hint="친구 아이디"
+            android:id="@+id/edt_email"
+            android:hint="친구 메일주소 입력"
+            android:layout_weight="7"
             android:layout_width="wrap_content"
             android:layout_height="match_parent" />
 
         <Button
             android:text="찾기"
+            android:id="@+id/btn_search"
+            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

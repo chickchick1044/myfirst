@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
             }else {
-                Log.w(TAG, "구글 로그인 실패");
+                DLog.w("구글 로그인 실패");
             }
         }
     }
@@ -94,6 +94,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.w(TAG, "구글 로그인 연결실패");
+        DLog.w("구글 로그인 연결실패");
     }
 }//LoginActivity
