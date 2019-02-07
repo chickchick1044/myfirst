@@ -7,9 +7,15 @@
     android:orientation="vertical"
     tools:context=".ChatFragment">
 
-    <TextView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="대화 목록1" />
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="대화 목록1" />
+
+    </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>

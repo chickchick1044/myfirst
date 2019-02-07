@@ -1,66 +1,58 @@
 package com.example.kimjihyeon.myapplication;
 
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-    private FloatingActionButton fab1;
+    private TabLayout mTabLayout;
+    private ViewPager mViewPager;
+    private FloatingActionButton mFab1;
+    private TabPagerAdapter mPagerAdapter;
+
+    private String TAG = "MainActivity";
+    public static final boolean DEBUG = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FloatingActionButton fab1 = (FloatingActionButton)findViewById(R.id.fab1);
+        mTabLayout = (TabLayout)findViewById(R.id.tabLayout);
+        mViewPager = (ViewPager)findViewById(R.id.viewpager);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        FloatingActionButton mFab1 = (FloatingActionButton)findViewById(R.id.fab1);
+        mFab1.setOnClickListener(this);
 
-        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        tabLayout.addTab(tabLayout.newTab().setText("대화목록"));
-        tabLayout.addTab(tabLayout.newTab().setText("친구목록"));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
-        TabPagerAdapter pagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
-        viewPager.setAdapter(pagerAdapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
-        fab1.setOnClickListener(this);
+        mTabLayout.setupWithViewPager(mViewPager);
+        setUpViewPager();
 
     }//onCreate ended
 
+    private void setUpViewPager() {
+        mPagerAdapter = new TabPagerAdapter(getSupportFragmentManager());
+        mPagerAdapter.addFragment(new ChatFragment(), "채팅");
+        mPagerAdapter.addFragment(new FriendFragment(), "친구");
+        mViewPager.setAdapter(mPagerAdapter);
+    }
+
     @Override
     public void onClick(View view) {
-        int id = view.getId();
-        switch (id){
+        switch (view.getId()){
             case R.id.fab1:
-                //floating action btn 클릭시
+                Fragment currentFragment = mPagerAdapter.getItem(mViewPager.getCurrentItem());
+                if (currentFragment instanceof FriendFragment){
+                    //Toast.makeText(MainActivity.this, "Friend Fragment 입니다.", Toast.LENGTH_LONG).show();
+                    ((FriendFragment)currentFragment).toggleSearchBar();
+                }else{
+                    //Toast.makeText(MainActivity.this, "Friend Fragment 가 아닙니다.", Toast.LENGTH_LONG).show();
+                }
                 break;
         }
 
