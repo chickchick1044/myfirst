@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.kimjihyeon.myapplication.adapters.TabPagerAdapter;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TabLayout mTabLayout;

@@ -2,7 +2,11 @@ package com.example.kimjihyeon.myapplication;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +15,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.kimjihyeon.myapplication.adapters.FriendListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,6 +33,8 @@ public class FriendFragment extends Fragment {
     private LinearLayout mSearchArea;
     private EditText mEditEmail;
     private Button mBtnSearch;
+    private RecyclerView mRecyclerView;
+    private FriendListAdapter mFriendListAdapter;
 
     private FirebaseUser mFirebaseUser;
     private FirebaseAuth mFirebaseAuth;
@@ -55,11 +63,16 @@ public class FriendFragment extends Fragment {
         mFriendsDBRef = mFirebaseDB.getReference("users").child(mFirebaseUser.getUid()).child("friends");
         mUserDBRef = mFirebaseDB.getReference("users");
 
+        addFriendListener();
+        mFriendListAdapter = new FriendListAdapter();
+        mRecyclerView.setAdapter(mFriendListAdapter);
+        mRecyclerView.setLayoutManager( new LinearLayoutManager( getActivity() ) );
+        
         return friendView;
     }
-
+    
     public void toggleSearchBar(){
-        DLog.e( "id : " + mSearchArea.getId() + " isunll :" + mSearchArea.isActivated());
+        DLog.e( "id : " + mSearchArea.getId() + " is nll :" + mSearchArea.isActivated());
         mSearchArea.setVisibility(mSearchArea.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
     }
 
@@ -119,9 +132,7 @@ public class FriendFragment extends Fragment {
                                                 Toast.makeText(context, " 친구등록이 완료되었습니다. ", Toast.LENGTH_LONG).show();
                                             }
                                             @Override
-                                            public void onCancelled(DatabaseError databaseError) {
-
-                                            }
+                                            public void onCancelled(DatabaseError databaseError) { }
                                         });
                                     }
                                 });
@@ -138,18 +149,41 @@ public class FriendFragment extends Fragment {
                     }
 
                     @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
+                    public void onCancelled(DatabaseError databaseError) { }
                 });
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) { }
         });
 
+    } //add Friend
+
+
+    private void addFriendListener() {
+        mFriendsDBRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                User friend = dataSnapshot.getValue(User.class);
+                drawUI(friend);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) { }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
     }
 
-}
+    private void drawUI(User friend) {
+        mFriendListAdapter.addItem(friend);
+    }
+
+}//FriendFragment
