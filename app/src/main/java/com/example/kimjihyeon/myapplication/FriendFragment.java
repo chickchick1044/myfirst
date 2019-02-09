@@ -56,7 +56,7 @@ public class FriendFragment extends Fragment {
             }
         });
 
-        mFirebaseUser = mFirebaseAuth.getCurrentUser();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser(); // on a null object reference
         mFirebaseAuth = mFirebaseAuth.getInstance();
         mFirebaseDB = mFirebaseDB.getInstance();
 
