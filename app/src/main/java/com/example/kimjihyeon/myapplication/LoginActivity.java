@@ -18,7 +18,6 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,10 +28,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private SignInButton btn_googleSignIn;
     private FirebaseAuth mAuth;
-    //private GoogleApiClient mGoogleApiClient;
     private GoogleSignInClient mGoogleSignInClient;
-
-    private static String TAG = "LoginActivity";
     private static final int RC_SIGN_IN = 1000;
 
     @Override
@@ -53,9 +49,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail().build();
-        //mGoogleApiClient = new GoogleApiClient.Builder(this)
-                //.enableAutoManage(this, this)
-                //.addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }//onCreate
 
@@ -64,6 +57,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+    /*
     private void signOut(){
         mAuth.signOut();
         mGoogleSignInClient.signOut().addOnCompleteListener(this,
@@ -73,7 +67,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         updateUI(null);
                     }
                 });
-    }
+    }*/
 
     private void updateUI(FirebaseUser user) {
         if (user != null){
@@ -111,7 +105,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             DLog.d("signInWithCredential: success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
-
                         }else {
                             DLog.w("signInWithCredential: failure");
                             updateUI(null);
