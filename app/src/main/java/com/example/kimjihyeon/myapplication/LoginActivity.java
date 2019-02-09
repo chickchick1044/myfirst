@@ -2,11 +2,14 @@ package com.example.kimjihyeon.myapplication;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.kimjihyeon.myapplication.models.User;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -18,18 +21,28 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
 
     private SignInButton btn_googleSignIn;
-    private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 1000;
+
+    private FirebaseAuth mAuth;
+    private FirebaseAnalytics mFirebaseAnalytics;
+    private FirebaseDatabase mFirebaseDB;
+    private DatabaseReference mDBReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +50,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        mFirebaseDB = FirebaseDatabase.getInstance();
+        mDBReference = mFirebaseDB.getReference("users");
 
         btn_googleSignIn = findViewById(R.id.btn_googleSignIn);
         btn_googleSignIn.setOnClickListener(new View.OnClickListener() {
@@ -72,9 +88,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void updateUI(FirebaseUser user) {
         if (user != null){
             Toast.makeText(this, "로그인 성공", Toast.LENGTH_LONG).show();
-            //Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            //startActivity(intent);
-            //finish();
+
+            //mDBReference.push().setValue(new String("something"));
+
+
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
         }else{
             Toast.makeText(this, "로그인 실패", Toast.LENGTH_SHORT).show();
         }
@@ -103,8 +123,41 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
                             DLog.d("signInWithCredential: success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
+                            final FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                            final User user = new User();
+                            user.setEmail(firebaseUser.getEmail());
+                            user.setName(firebaseUser.getDisplayName());
+                            user.setUid(firebaseUser.getUid());
+                            if (firebaseUser.getPhotoUrl() != null){ user.setProfileUrl(firebaseUser.getPhotoUrl().toString()); }
+
+                            mDBReference.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (! dataSnapshot.exists()){
+                                        mDBReference.child(firebaseUser.getUid()).setValue(user, new DatabaseReference.CompletionListener() {
+                                            @Override
+                                            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                                                if (databaseError == null){
+                                                    DLog.d("DB에러없음");
+                                                    Toast.makeText(LoginActivity.this, "DB에러없음", Toast.LENGTH_LONG).show();
+                                                }else{
+                                                    DLog.w("DB 에러 발생");
+                                                    Toast.makeText(LoginActivity.this, "DB 에러 발생", Toast.LENGTH_LONG).show();
+                                                }
+                                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                                finish();
+                                                Bundle eventBundle = new Bundle();
+                                                eventBundle.putString("email", firebaseUser.getEmail());
+                                                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, eventBundle);
+                                            }
+                                        });
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) { }
+                            });
+                            updateUI(firebaseUser);
                         }else {
                             DLog.w("signInWithCredential: failure");
                             updateUI(null);

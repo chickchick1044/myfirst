@@ -1,23 +1,23 @@
 package com.example.kimjihyeon.myapplication.adapters;
 
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.kimjihyeon.myapplication.FriendFragment;
 import com.example.kimjihyeon.myapplication.R;
-import com.example.kimjihyeon.myapplication.User;
+import com.example.kimjihyeon.myapplication.models.User;
 import com.example.kimjihyeon.myapplication.customviews.RoundedImageView;
 
 import java.util.ArrayList;
 
 public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.FriendHolder> {
 
-    public static final int UNSELECTION_MODE = 1;
+    public static final int UNSELECTION_MODE = 1; //단일 선택 모드
     public static final int SELECTION_MODE = 2; //복수 선택 모드
+
+    private int selectionMode = UNSELECTION_MODE;
 
     private ArrayList<User> friendList;
 
@@ -29,6 +29,37 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
         friendList.add(friend);
         notifyDataSetChanged();
     }
+
+    public void setSelectionMode(int selectionMode) {
+        this.selectionMode = selectionMode;
+        notifyDataSetChanged();
+    }
+
+    public int getSelectionMode() {
+        return this.selectionMode;
+    }
+
+    public int getSelectionUsersCount() {
+        int selectedCount = 0;
+        for ( User user : friendList) {
+            if ( user.isSelection() ) {
+                selectedCount++;
+            }
+        }
+        return selectedCount;
+    }
+
+    public String [] getSelectedUids() {
+        String [] selecteUids = new String[getSelectionUsersCount()];
+        int i = 0;
+        for ( User user : friendList) {
+            if ( user.isSelection() ) {
+                selecteUids[i] = user.getUid();
+            }
+        }
+        return selecteUids;
+    }
+
 
     public User getItem(int position){
         return this.friendList.get(position);
@@ -47,7 +78,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
         holder.mEmailView.setText(friend.getEmail());
         holder.mNameView.setText(friend.getName());
         if(friend.getProfileUrl() != null){
-            //프로필 이미지가 있을 때
+            //holder.mProfileView.set
         }
     }
 

@@ -1,9 +1,11 @@
 package com.example.kimjihyeon.myapplication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.kimjihyeon.myapplication.adapters.FriendListAdapter;
+import com.example.kimjihyeon.myapplication.customviews.RecyclerViewItemClickListener;
+import com.example.kimjihyeon.myapplication.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -49,6 +53,7 @@ public class FriendFragment extends Fragment {
         mSearchArea = friendView.findViewById(R.id.search_area);
         mEditEmail = friendView.findViewById(R.id.edt_email);
         mBtnSearch = friendView.findViewById(R.id.btn_search);
+        mRecyclerView= friendView.findViewById(R.id.recyclerview_friend);
         mBtnSearch.setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -56,18 +61,48 @@ public class FriendFragment extends Fragment {
             }
         });
 
-        mFirebaseUser = mFirebaseAuth.getCurrentUser(); // on a null object reference
         mFirebaseAuth = mFirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
         mFirebaseDB = mFirebaseDB.getInstance();
 
         mFriendsDBRef = mFirebaseDB.getReference("users").child(mFirebaseUser.getUid()).child("friends");
         mUserDBRef = mFirebaseDB.getReference("users");
 
         addFriendListener();
+
         mFriendListAdapter = new FriendListAdapter();
         mRecyclerView.setAdapter(mFriendListAdapter);
         mRecyclerView.setLayoutManager( new LinearLayoutManager( getActivity() ) );
-        
+        mRecyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(getContext(), new RecyclerViewItemClickListener.OnItemClickListener(){
+            @Override
+            public void onItemClick(View view, int position) {
+                final User friend = mFriendListAdapter.getItem(position);
+
+                if (mFriendListAdapter.getSelectionMode() == FriendListAdapter.UNSELECTION_MODE) {
+                    Snackbar.make(view, friend.getName()+"님과 대화를 하시겠습니까?", Snackbar.LENGTH_LONG).setAction("예", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent chatIntent = new Intent(getActivity(), ChatActivity.class);
+                            chatIntent.putExtra("uid", friend.getUid());
+                            startActivity(chatIntent);
+                        }
+                    }).show();
+                } else {
+                    friend.setSelection(friend.isSelection() ? false : true);
+                    int selectedUserCount = mFriendListAdapter.getSelectionUsersCount();
+                    Snackbar.make(view, selectedUserCount+"명과 대화를 하시겠습니까?", Snackbar.LENGTH_LONG).setAction("예", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent chatIntent = new Intent(getActivity(), ChatActivity.class);
+                            chatIntent.putExtra("uids", mFriendListAdapter.getSelectedUids());
+                            startActivity(chatIntent);
+                        }
+                    }).show();
+                }
+
+            }
+        }));
+
         return friendView;
     }
     
