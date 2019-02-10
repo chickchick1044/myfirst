@@ -1,7 +1,8 @@
-package com.example.kimjihyeon.myapplication;
+package com.example.kimjihyeon.myapplication.models;
 
 public class User {
     private String uid, email, name, profileUrl;
+    private boolean selection;
 
     public String getUid() {
         return uid;
@@ -19,9 +20,9 @@ public class User {
         return profileUrl;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
+    public boolean isSelection() { return selection; }
+
+    public void setUid(String uid) { this.uid = uid; }
 
     public void setName(String name) {
         this.name = name;
@@ -31,8 +32,9 @@ public class User {
         this.email = email;
     }
 
-
     public void setProfileUrl(String profileUrl) {
         this.profileUrl = profileUrl;
     }
+
+    public void setSelection(boolean selection) { this.selection = selection; }
 }
