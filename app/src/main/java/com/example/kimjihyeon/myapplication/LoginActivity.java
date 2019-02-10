@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail().build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-    }//onCreate
+    }
 
     private void signIn(){
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
@@ -87,11 +87,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private void updateUI(FirebaseUser user) {
         if (user != null){
-            Toast.makeText(this, "로그인 성공", Toast.LENGTH_LONG).show();
-
+            //Toast.makeText(this, "로그인 성공", Toast.LENGTH_LONG).show();
             //mDBReference.push().setValue(new String("something"));
-
-
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
@@ -109,7 +106,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
             }else {
-                DLog.w("구글 로그인 실패");
+                DLog.w("result is failure");
                 updateUI(null);
             }
         }
@@ -138,11 +135,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                             @Override
                                             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                                                 if (databaseError == null){
-                                                    DLog.d("DB에러없음");
+                                                    //DLog.d("DB에러없음");
                                                     Toast.makeText(LoginActivity.this, "DB에러없음", Toast.LENGTH_LONG).show();
                                                 }else{
                                                     DLog.w("DB 에러 발생");
-                                                    Toast.makeText(LoginActivity.this, "DB 에러 발생", Toast.LENGTH_LONG).show();
                                                 }
                                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                                 finish();
@@ -168,7 +164,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        DLog.w("onConnectionFailed");
+        DLog.w("Connection Failed");
     }
 
-}//LoginActivity
+}
