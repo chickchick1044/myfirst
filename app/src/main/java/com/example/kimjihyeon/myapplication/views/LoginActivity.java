@@ -1,14 +1,15 @@
-package com.example.kimjihyeon.myapplication;
+package com.example.kimjihyeon.myapplication.views;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.kimjihyeon.myapplication.DLog;
+import com.example.kimjihyeon.myapplication.R;
 import com.example.kimjihyeon.myapplication.models.User;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;

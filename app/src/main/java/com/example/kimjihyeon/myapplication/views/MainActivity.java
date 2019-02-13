@@ -1,4 +1,4 @@
-package com.example.kimjihyeon.myapplication;
+package com.example.kimjihyeon.myapplication.views;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.kimjihyeon.myapplication.R;
 import com.example.kimjihyeon.myapplication.adapters.TabPagerAdapter;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -54,6 +55,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     ((FriendFragment)currentFragment).toggleSearchBar();
                 }else{
                     //Toast.makeText(MainActivity.this, "Friend Fragment 가 아닙니다.", Toast.LENGTH_LONG).show();
+                    mViewPager.setCurrentItem(2, true);
+                    FriendFragment friendFragment = (FriendFragment) mPagerAdapter.getItem(1);
+                    friendFragment.toggleSelectionMode();
                 }
                 break;
         }

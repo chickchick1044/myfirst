@@ -2,6 +2,8 @@ package com.example.kimjihyeon.myapplication;
 
 import android.util.Log;
 
+import com.example.kimjihyeon.myapplication.views.MainActivity;
+
 public class DLog {
 
     static final String TAG = "ERROR";

@@ -1,10 +1,12 @@
-package com.example.kimjihyeon.myapplication;
+package com.example.kimjihyeon.myapplication.views;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.kimjihyeon.myapplication.R;
 
 public class ChatFragment extends Fragment {
 
