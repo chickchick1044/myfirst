@@ -1,4 +1,4 @@
-package com.example.kimjihyeon.myapplication;
+package com.example.kimjihyeon.myapplication.views;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,9 +17,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.kimjihyeon.myapplication.DLog;
+import com.example.kimjihyeon.myapplication.R;
 import com.example.kimjihyeon.myapplication.adapters.FriendListAdapter;
 import com.example.kimjihyeon.myapplication.customviews.RecyclerViewItemClickListener;
 import com.example.kimjihyeon.myapplication.models.User;
+import com.example.kimjihyeon.myapplication.views.ChatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -109,6 +112,11 @@ public class FriendFragment extends Fragment {
     public void toggleSearchBar(){
         DLog.e( "id : " + mSearchArea.getId() + " is nll :" + mSearchArea.isActivated());
         mSearchArea.setVisibility(mSearchArea.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+    }
+
+    public void toggleSelectionMode(){
+        mFriendListAdapter
+                .setSelectionMode(mFriendListAdapter.getSelectionMode() == mFriendListAdapter.SELECTION_MODE ? mFriendListAdapter.UNSELECTION_MODE : mFriendListAdapter.SELECTION_MODE);
     }
 
     public void addFriend(){

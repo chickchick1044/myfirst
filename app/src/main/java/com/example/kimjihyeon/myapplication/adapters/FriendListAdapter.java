@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.example.kimjihyeon.myapplication.R;
@@ -16,9 +17,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
 
     public static final int UNSELECTION_MODE = 1; //단일 선택 모드
     public static final int SELECTION_MODE = 2; //복수 선택 모드
-
     private int selectionMode = UNSELECTION_MODE;
-
     private ArrayList<User> friendList;
 
     public FriendListAdapter(){
@@ -80,6 +79,12 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
         if(friend.getProfileUrl() != null){
             //holder.mProfileView.set
         }
+        if (getSelectionMode() == UNSELECTION_MODE){
+            holder.mFriendSelectionView.setVisibility(View.GONE);
+        }else{
+            holder.mFriendSelectionView.setVisibility(View.VISIBLE);
+        }
+
     }
 
     @Override
@@ -92,14 +97,16 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
         RoundedImageView mProfileView;
         TextView mNameView;
         TextView mEmailView;
+        CheckBox mFriendSelectionView;
 
         private FriendHolder(View itemView) {
             super(itemView);
             mProfileView = (RoundedImageView) itemView.findViewById(R.id.thumb);
             mNameView = (TextView) itemView.findViewById(R.id.tv_name);
             mEmailView = (TextView) itemView.findViewById(R.id.tv_email);
-
+            mFriendSelectionView = (CheckBox) itemView.findViewById(R.id.checkbox);
         }
+
     }
 
 }
