@@ -12,7 +12,9 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        //1대1채팅
         String uid = getIntent().getStringExtra("uid");
+        //1대다 채팅
         String [] uids = getIntent().getStringArrayExtra("uids");
 
     }

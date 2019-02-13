@@ -17,9 +17,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
 
     public static final int UNSELECTION_MODE = 1; //단일 선택 모드
     public static final int SELECTION_MODE = 2; //복수 선택 모드
-
     private int selectionMode = UNSELECTION_MODE;
-
     private ArrayList<User> friendList;
 
     public FriendListAdapter(){
