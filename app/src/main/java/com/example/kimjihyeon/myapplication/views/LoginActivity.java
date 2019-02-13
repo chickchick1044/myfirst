@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.kimjihyeon.myapplication.DLog;
@@ -37,6 +38,7 @@ import com.google.firebase.database.ValueEventListener;
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
 
     private SignInButton btn_googleSignIn;
+    private Button btn_googleSignOut;
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 1000;
 
@@ -63,6 +65,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
         });
 
+        btn_googleSignOut = findViewById(R.id.btn_googleSignOut);
+        btn_googleSignOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signOut();
+            }
+        });
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail().build();
@@ -74,7 +84,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-    /*
+
     private void signOut(){
         mAuth.signOut();
         mGoogleSignInClient.signOut().addOnCompleteListener(this,
@@ -84,7 +94,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         updateUI(null);
                     }
                 });
-    }*/
+    }
 
     private void updateUI(FirebaseUser user) {
         if (user != null){
